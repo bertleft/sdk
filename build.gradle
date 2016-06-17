@@ -40,7 +40,7 @@ dependencies {
     corelibs dep("org.jmonkeyengine:jme3-effects:$jmeEngineVersion", true, true)
     corelibs dep("org.jmonkeyengine:jme3-blender:$jmeEngineVersion", true, true)
 
-    corelibs dep("org.jmonkeyengine:jme3-jbullet:$jmeEngineVersion", true, true)
+//    corelibs dep("org.jmonkeyengine:jme3-jbullet:$jmeEngineVersion", true, true)
     corelibs dep(fileTree("lib"), false, false)
     corelibs dep("org.jmonkeyengine:jme3-jogg:$jmeEngineVersion", true, true)
 
@@ -49,16 +49,16 @@ dependencies {
     corelibs dep("org.jmonkeyengine:jme3-plugins:$jmeEngineVersion", true, true)
     corelibs dep("org.jmonkeyengine:jme3-terrain:$jmeEngineVersion", true, true)
 
-    optlibs dep("org.jmonkeyengine:jme3-bullet:$jmeEngineVersion", true, true)
+    corelibs dep("org.jmonkeyengine:jme3-bullet:$jmeEngineVersion", true, true)
     optlibs dep("org.jmonkeyengine:jme3-jogl:$jmeEngineVersion", true, true)
     optlibs dep("org.jmonkeyengine:jme3-android:$jmeEngineVersion", true, true)
-    optlibs dep("org.jmonkeyengine:jme3-ios:$jmeEngineVersion", true, true)
+//    optlibs dep("org.jmonkeyengine:jme3-ios:$jmeEngineVersion", true, true)
     optlibs dep("org.jmonkeyengine:jme3-android-native:$jmeEngineVersion", true, true)
     optlibs dep("org.jmonkeyengine:jme3-bullet-native:$jmeEngineVersion", true, true)
     optlibs dep("org.jmonkeyengine:jme3-bullet-native-android:$jmeEngineVersion", true, true)
-    testdatalibs dep("org.jmonkeyengine:jme3-testdata:$jmeEngineVersion", false, false)
+//    testdatalibs dep("org.jmonkeyengine:jme3-testdata:$jmeEngineVersion", false, false)
 
-    examplelibs dep("org.jmonkeyengine:jme3-examples:$jmeEngineVersion", false, true)
+//    examplelibs dep("org.jmonkeyengine:jme3-examples:$jmeEngineVersion", false, true)
 
 }
 
