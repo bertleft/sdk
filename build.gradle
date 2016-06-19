@@ -11,6 +11,7 @@ if (!hasProperty('mainClass')) {
 }
 
 repositories {
+    mavenLocal()
     jcenter {
         url "http://jcenter.bintray.com/"
     }
@@ -33,7 +34,6 @@ configurations {
 }
 
 dependencies {
-
     corelibs dep("org.jmonkeyengine:jme3-core:$jmeEngineVersion",true,true)
     corelibs dep("org.jmonkeyengine:jme3-desktop:$jmeEngineVersion", true, true)
     corelibs dep("org.jmonkeyengine:jme3-lwjgl:$jmeEngineVersion", true, true)
@@ -59,10 +59,22 @@ dependencies {
 //    testdatalibs dep("org.jmonkeyengine:jme3-testdata:$jmeEngineVersion", false, false)
 
 //    examplelibs dep("org.jmonkeyengine:jme3-examples:$jmeEngineVersion", false, true)
-
 }
 
 def dep(coords, javadoc = false, sources = false) {
+    if (coords instanceof GString) {
+        def parts = coords.split(':')
+        if (hasProperty('customJmeGroup') && (customJmeGroup != '')) {
+            parts[0] = customJmeGroup
+        }
+        if (hasProperty('prefixForJars') && (prefixForJars != '')) {
+            parts[1] = prefixForJars + parts[1]
+        }
+        if (hasProperty('customJmeVersion') && (customJmeVersion != '')) {
+            parts[2] = customJmeVersion
+        }
+        coords = parts[0] + ':' + parts[1] + ':' + parts[2]
+    }
 
     def result = [dependencies.create(coords)]
 
@@ -72,6 +84,19 @@ def dep(coords, javadoc = false, sources = false) {
 
     result
 
+}
+
+task printLibs(dependsOn: [configurations.corelibs, configurations.optlibs]) <<{
+    println "corelibs:"
+    project.configurations.corelibs.collect {file ->
+        println file.name
+    }
+
+    println ""
+    println "optlibs:"
+    project.configurations.optlibs.collect {file ->
+        println file.name
+    }
 }
 
 
@@ -112,7 +137,7 @@ task copyBaseLibs(dependsOn:configurations.corelibs) <<{
    
     project.configurations.corelibs.collect {file ->
         // copy built jme3 jar files to jme3-core-baselibs
-        if (file.name.startsWith("jme3-") && !isSourceOrJavadoc(file.name)){
+        if (isJmeDep(file.name) && !isSourceOrJavadoc(file.name)){
             copy {
                 from file
                 into "jme3-core-baselibs/release/modules/ext/"
@@ -143,8 +168,9 @@ def isJavadoc(dep){
     return dep.endsWith("-javadoc.jar")
 }
 def isJmeDep(dep) {
-    return dep.startsWith("jme3-")
+    return dep.startsWith("jme3-") || dep.startsWith(prefixForJars + "jme3-")
 }
+
 
 task createBaseXml(dependsOn: configurations.corelibs) <<{
     description "Creates the project.xml files for "+
@@ -155,7 +181,7 @@ task createBaseXml(dependsOn: configurations.corelibs) <<{
     // collect jar files
     project.configurations.corelibs.collect {file ->
         // copy built jme3 jar files to jme3-core-baselibs
-        if (file.name.startsWith("jme3-") && !isSourceOrJavadoc(file.name)){
+        if (isJmeDep(file.name) && !isSourceOrJavadoc(file.name)){
         
             //collect jme jars
             if(!jmeJarFiles.contains(file)){
